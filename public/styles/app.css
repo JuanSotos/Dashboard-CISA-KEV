@@ -1,0 +1,143 @@
+/* KEV Advisor — componentes y maquetación sobre tokens.css (sistema "Industry").
+   Reglas: radio 0 en todo, tarjetas de línea con marcas de registro (.blueprint),
+   rojo/ámbar/verde solo para severidad y siempre con texto o icono. */
+
+*, *::before, *::after { border-radius: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { min-height: 100vh; }
+button, input, textarea, select { font: inherit; color: inherit; }
+p { margin: 0; }
+figure { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+svg.ic { display: block; flex: none; }
+.muted { color: var(--kev-muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+[hidden] { display: none !important; }
+a.cve { font-weight: 500; text-decoration: none; }
+a.cve:hover { text-decoration: underline; }
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: none;
+  white-space: nowrap; cursor: pointer; text-decoration: none;
+  font-family: var(--font-heading); font-weight: 600; font-size: 14px; line-height: 1.2;
+  color: var(--color-text); background: transparent;
+  border: 1px solid var(--color-divider); padding: 6.8px 12px;
+}
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-bg); }
+.btn-primary:not(:disabled):hover { background: var(--color-accent-600); border-color: var(--color-accent-600); }
+.btn-primary:not(:disabled):active { background: var(--color-accent-700); border-color: var(--color-accent-700); }
+.btn-primary.blueprint { position: relative; border: 1px solid var(--color-accent); height: 38px; padding: 0 16px; font-size: 15px; }
+.btn-secondary:not(:disabled):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.btn-secondary:not(:disabled):active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+.btn-ghost { color: var(--kev-ink-accent); border-color: transparent; padding-inline: 3.4px; font-size: 14px; }
+.btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.btn-ghost:active { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
+.btn-icon { width: 36px; height: 36px; padding: 0; }
+
+/* ---------- Campos ---------- */
+.field > label { display: block; font-size: 12px; margin-bottom: 5px; color: color-mix(in srgb, var(--color-text) 70%, transparent); }
+.input {
+  width: 100%; min-height: 36px; padding: 6px 10px; font-size: 14px;
+  color: var(--color-text); caret-color: var(--color-accent);
+  background: var(--color-surface); border: 1px solid var(--color-divider);
+}
+.input::placeholder { color: var(--kev-muted); opacity: 1; }
+.input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
+.input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+textarea.input { min-height: 90px; resize: vertical; }
+
+/* Control segmentado (radios nativos) */
+.seg { display: inline-flex; flex: none; border: 1px solid var(--color-divider); }
+.seg-opt { position: relative; display: inline-flex; align-items: center; padding: 7px 12px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
+.seg-opt input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+.seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
+.seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.seg-opt:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* ---------- Etiquetas ---------- */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+  font-weight: 700; font-size: 10.5px; line-height: 1.5; letter-spacing: .08em; text-transform: uppercase;
+  padding: 2px 7px;
+}
+.tag-over { background: var(--sev-crit); color: var(--color-bg); }
+.tag-soon { border: 1px solid var(--sev-warn); color: var(--sev-warn-ink); padding: 1px 7px; }
+.tag-rw { background: var(--sev-crit-bg); color: var(--sev-crit-ink); }
+.tag-fx { background: var(--sev-warn-bg); color: var(--sev-warn-ink); }
+.tag-ok { background: var(--sev-ok-bg); color: var(--sev-ok-ink); }
+.due-over { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--sev-crit-ink); white-space: nowrap; }
+
+/* ---------- Página ---------- */
+.topbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px;
+  padding: 14px var(--page-pad); border-bottom: 1px solid var(--color-divider);
+}
+.brand { display: flex; align-items: center; gap: 12px; margin-right: auto; min-width: 0; }
+.brand svg { flex: none; }
+.brand-name { font-family: var(--font-heading); font-weight: 600; font-size: 23px; line-height: 1; letter-spacing: .05em; text-transform: uppercase; margin: 0; }
+.brand-sub { font-size: 12px; color: var(--kev-muted); margin-top: 3px; }
+.top-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.top-actions .btn { height: 36px; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px;
+  border: 1px solid var(--color-divider); font-size: 12.5px; white-space: nowrap;
+}
+.pill strong { font-weight: 500; }
+.pill .sq { width: 8px; height: 8px; flex: none; }
+.pill[data-status="live"] .sq { background: var(--sev-ok); }
+.pill[data-status="refreshing"] .sq, .pill[data-status="loading"] .sq { border: 1.5px solid var(--color-accent); }
+.pill[data-status="offline"] { border-color: var(--sev-crit); background: var(--sev-crit-bg); color: var(--sev-crit-ink); }
+.pill[data-status="offline"] .sq { background: var(--sev-crit); }
+.pill[data-status="offline"] .muted { color: inherit; }
+
+main {
+  max-width: var(--page-max); margin: 0 auto;
+  padding: clamp(20px, 2.5vw, 36px) var(--page-pad) 0;
+  display: flex; flex-direction: column; gap: var(--section-gap);
+}
+section { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.sec-head {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px;
+  padding-bottom: 10px; border-bottom: 1.5px solid var(--color-text);
+}
+.sec-num { font-family: var(--font-heading); font-weight: 600; font-size: 15px; letter-spacing: .1em; color: var(--kev-ink-accent); }
+.sec-num.crit { color: var(--sev-crit); }
+.sec-head h2 { font-size: 30px; text-transform: uppercase; letter-spacing: .03em; }
+.sec-desc { margin-left: auto; font-size: 13px; color: var(--kev-muted); }
+.row { display: flex; flex-wrap: wrap; gap: var(--gutter); }
+
+/* Tarjeta de figura */
+.fig { min-width: 0; padding: 20px 22px; display: flex; flex-direction: column; gap: 16px; }
+.fig-head { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 16px; }
+.fig-head > :first-child { margin-right: auto; }
+.kicker { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--kev-ink-accent); }
+.fig h3 { margin-top: 2px; font-size: 21px; }
+.sub { font-size: 13px; color: var(--kev-muted); }
+figcaption { font-size: 12px; color: var(--kev-muted); }
+
+/* Pie */
+footer { max-width: var(--page-max); margin: 0 auto; padding: 40px var(--page-pad) 28px; }
+.foot {
+  display: flex; flex-wrap: wrap; gap: 6px 24px; padding-top: 14px;
+  border-top: 1px solid var(--color-divider); font-size: 12.5px; color: var(--kev-muted);
+}
+.foot > :last-child { margin-left: auto; }
+
+/* ---------- Estados ---------- */
+.sk { background: var(--color-neutral-200); }
+.alert {
+  border-color: var(--sev-crit); padding: 16px 18px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.alert .ic { color: var(--sev-crit); }
+.alert-body { display: flex; flex-direction: column; gap: 8px; }
+.alert-title { font-weight: 500; color: var(--sev-crit-ink); }
+.alert .btn { align-self: flex-start; }
+.empty { padding: 40px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.empty .ic { color: var(--kev-muted); }
+.empty-title { font-family: var(--font-heading); font-weight: 600; font-size: 20px; }
+.empty-text { font-size: 14px; color: var(--kev-muted); }
