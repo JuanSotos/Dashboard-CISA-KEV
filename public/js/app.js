@@ -3,10 +3,11 @@
 import { $, esc, fdate, ago, corners } from "./util.js";
 import { icon } from "./icons.js";
 import { S, R, fetchCatalog, derive, setDerived } from "./data.js";
+import urgent from "./sections/urgent.js";
 
 // Secciones en orden de página. Cada una expone mount/render y, opcionalmente,
 // skeleton (carga inicial) y unavailable (sin datos tras un error).
-const sections = [];
+const sections = [urgent];
 for (const sec of sections) R[sec.name] = () => sec.render();
 
 /* ---------- Tema ---------- */
