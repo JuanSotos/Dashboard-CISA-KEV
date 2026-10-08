@@ -3,6 +3,12 @@
    rojo/ámbar/verde solo para severidad y siempre con texto o icono. */
 
 *, *::before, *::after { border-radius: 0; }
+
+/* Relleno de controles con texto (primario, segmento activo). En claro, el acento
+   (#5980a6) da 3,7:1 con --color-bg y no llega a AA para texto de 13–15 px;
+   se usa el escalón 700 (5,8:1). En oscuro el acento ya da 8,6:1. */
+:root { --kev-fill: var(--color-accent); --kev-fill-hover: var(--color-accent-600); --kev-fill-active: var(--color-accent-700); }
+:root[data-theme="light"] { --kev-fill: var(--color-accent-700); --kev-fill-hover: var(--color-accent-800); --kev-fill-active: var(--color-accent-900); }
 html { -webkit-text-size-adjust: 100%; }
 body { min-height: 100vh; }
 button, input, textarea, select { font: inherit; color: inherit; }
@@ -25,10 +31,10 @@ a.cve:hover { text-decoration: underline; }
   border: 1px solid var(--color-divider); padding: 6.8px 12px;
 }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
-.btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-bg); }
-.btn-primary:not(:disabled):hover { background: var(--color-accent-600); border-color: var(--color-accent-600); }
-.btn-primary:not(:disabled):active { background: var(--color-accent-700); border-color: var(--color-accent-700); }
-.btn-primary.blueprint { position: relative; border: 1px solid var(--color-accent); height: 38px; padding: 0 16px; font-size: 15px; }
+.btn-primary { background: var(--kev-fill); border-color: var(--kev-fill); color: var(--color-bg); }
+.btn-primary:not(:disabled):hover { background: var(--kev-fill-hover); border-color: var(--kev-fill-hover); }
+.btn-primary:not(:disabled):active { background: var(--kev-fill-active); border-color: var(--kev-fill-active); }
+.btn-primary.blueprint { position: relative; height: 38px; padding: 0 16px; font-size: 15px; }
 .btn-secondary:not(:disabled):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
 .btn-secondary:not(:disabled):active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
 .btn-ghost { color: var(--kev-ink-accent); border-color: transparent; padding-inline: 3.4px; font-size: 14px; }
@@ -45,7 +51,7 @@ a.cve:hover { text-decoration: underline; }
 }
 .input::placeholder { color: var(--kev-muted); opacity: 1; }
 .input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
-.input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+.input:focus-visible { border-color: var(--color-accent); }
 textarea.input { min-height: 90px; resize: vertical; }
 
 /* Control segmentado (radios nativos) */
@@ -53,7 +59,7 @@ textarea.input { min-height: 90px; resize: vertical; }
 .seg-opt { position: relative; display: inline-flex; align-items: center; padding: 7px 12px; font-size: 13px; cursor: pointer; white-space: nowrap; }
 .seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
 .seg-opt input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
-.seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
+.seg-opt:has(input:checked) { background: var(--kev-fill); color: var(--color-bg); }
 .seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
 .seg-opt:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
@@ -359,3 +365,4 @@ a.ext { display: inline-flex; align-items: center; gap: 4px; }
 .c-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 4px; font-size: 12.5px; }
 .c-tags .tag { font-size: 10px; }
 .c-tags .due-over { gap: 6px; font-size: 12.5px; }
+.reg-more { align-self: flex-start; margin-top: 4px; }

@@ -78,12 +78,12 @@ function runCheck() {
   if (!lines(S.stackText).length) { S.checkResults = []; S.checkStatus = "idle"; renderResults(); return; }
   S.checkStatus = "checking";
   renderResults();
-  // Deja pintar el skeleton y calcula; dura lo que dure el cruce real.
-  requestAnimationFrame(() => setTimeout(() => {
+  // Deja pintar el skeleton (~1 frame) y calcula; dura lo que dure el cruce real.
+  setTimeout(() => {
     S.checkResults = check(S.stackText);
     S.checkStatus = "done";
     renderResults();
-  }, 0));
+  }, 16);
 }
 
 function checkerHtml() {

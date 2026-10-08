@@ -5,6 +5,8 @@ import { icon } from "../icons.js";
 import { S, D, R } from "../data.js";
 
 const NARROW = 720;
+const CARD_PAGE = 50; // en móvil las tarjetas no tienen scroll propio: se muestran por bloques
+let cardLimit = CARD_PAGE;
 const COLS = [
   { key: "cve", label: "CVE", w: "150px" },
   { key: "vendor", label: "Fabricante / producto", w: "200px" },
@@ -52,12 +54,14 @@ function tableHtml(rows) {
 }
 
 function cardsHtml(rows) {
-  return `<ul class="reg-cards" aria-label="Registro de vulnerabilidades">${rows.map(r => `<li>
+  const rest = rows.length - cardLimit;
+  return `<ul class="reg-cards" aria-label="Registro de vulnerabilidades">${rows.slice(0, cardLimit).map(r => `<li>
     <div class="c-top"><a class="cve" href="${r.url}" target="_blank" rel="noopener">${r.cve}</a><span class="sub">Añadida ${r.addedShort}</span></div>
     <div class="sub">${esc(r.vendor)} · ${esc(r.product)}</div>
     <div class="c-name">${esc(r.name)}</div>
     <div class="c-tags">${dueStatus(r)}${r.rw ? tag.rw(false) : ""}${r.fx ? tag.fx(false) : ""}</div>
-  </li>`).join("")}</ul>`;
+  </li>`).join("")}</ul>
+  ${rest > 0 ? `<button class="btn btn-secondary reg-more" type="button" id="reg-more">Ver ${fmt(Math.min(rest, CARD_PAGE))} más · quedan ${fmt(rest)}</button>` : ""}`;
 }
 
 function emptyHtml() {
@@ -77,7 +81,9 @@ function renderToolbar() {
     : "";
 }
 
-function renderBody() {
+function renderBody(keepLimit) {
+  if (!keepLimit) cardLimit = CARD_PAGE;
+  S.narrow = $("#registry").clientWidth < NARROW;
   const rows = filtered();
   $("#reg-count").textContent = "Mostrando " + fmt(rows.length) + " de " + fmt(D.rows.length);
   // Conserva el scroll horizontal/vertical de la tabla al reordenar.
@@ -116,6 +122,13 @@ export default {
     box.addEventListener("click", e => {
       if (e.target.closest("#clear-vendor")) { S.vendorFilter = null; render(); R.risk?.(); $("#reg-q").focus(); return; }
       if (e.target.closest("#reg-clear")) { clearAll(); $("#reg-q").focus(); return; }
+      if (e.target.closest("#reg-more")) {
+        const first = cardLimit;
+        cardLimit += CARD_PAGE; renderBody(true);
+        // El foco pasa a la primera tarjeta nueva.
+        $(`#reg-body .reg-cards li:nth-child(${first + 1}) a`)?.focus();
+        return;
+      }
       const b = e.target.closest("button[data-sort]");
       if (b) {
         const k = b.dataset.sort;
@@ -127,8 +140,7 @@ export default {
 
     // Tabla ≥ 720 px de contenedor; tarjetas por debajo.
     new ResizeObserver(([e]) => {
-      const n = e.contentRect.width < NARROW;
-      if (n !== S.narrow) { S.narrow = n; if (D) renderBody(); }
+      if ((e.contentRect.width < NARROW) !== S.narrow && D) renderBody();
     }).observe(box);
   },
   skeleton() {
