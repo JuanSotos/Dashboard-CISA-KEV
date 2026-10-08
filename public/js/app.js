@@ -7,10 +7,11 @@ import urgent from "./sections/urgent.js";
 import panorama from "./sections/panorama.js";
 import risk from "./sections/risk.js";
 import exposure from "./sections/exposure.js";
+import registry from "./sections/registry.js";
 
 // Secciones en orden de página. Cada una expone mount/render y, opcionalmente,
 // skeleton (carga inicial) y unavailable (sin datos tras un error).
-const sections = [urgent, panorama, risk, exposure];
+const sections = [urgent, panorama, risk, exposure, registry];
 for (const sec of sections) R[sec.name] = () => sec.render();
 
 /* ---------- Tema ---------- */
