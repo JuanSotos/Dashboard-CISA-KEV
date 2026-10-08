@@ -1,0 +1,6 @@
+node_modules/
+.env
+npm-debug.log*
+
+# Paquete de diseño (referencia local, no es código de producción)
+design_handoff_kev_advisor/

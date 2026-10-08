@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>KEV Advisor</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="brand">
+        <div class="t">
+          <span class="logo"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg></span>
+          <h1>KEV Advisor</h1>
+        </div>
+        <span class="sub">Inteligencia de vulnerabilidades explotadas · CISA KEV en tiempo real</span>
+      </div>
+      <div class="controls">
+        <span class="pill" id="status"><span class="live"></span><span id="status-txt">Conectando…</span></span>
+        <button class="btn icon" id="refresh" title="Actualizar catálogo" aria-label="Actualizar">
+          <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v5h-5"/></svg>
+        </button>
+        <button class="btn icon" id="theme" title="Cambiar tema" aria-label="Tema">
+          <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="banner" class="banner"><span class="spinner"></span><span>Descargando el catálogo oficial CISA KEV en vivo…</span></div>
+
+    <!-- KPIs -->
+    <section class="kpis" id="kpis" hidden></section>
+
+    <!-- CHART GRID (2x2, estética de referencia) -->
+    <div class="grid" id="charts" hidden>
+      <div class="card">
+        <div class="card-h">
+          <h2>Altas en el catálogo</h2>
+          <div class="r">
+            <button class="switch" id="sw-cum" aria-pressed="false"><span class="track"><span class="knob"></span></span>Acumulado</button>
+            <span class="kebab">⋮</span>
+          </div>
+        </div>
+        <div class="hint">Vulnerabilidades explotadas incorporadas por mes</div>
+        <svg class="chart" id="c-timeline" viewBox="0 0 580 230" role="img" aria-label="Altas por mes"></svg>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <h2>Por tipo de debilidad (CWE)</h2>
+          <span class="kebab">⋮</span>
+        </div>
+        <div class="hint">Las 8 debilidades (CWE) más frecuentes · causa raíz</div>
+        <div class="donut-wrap">
+          <svg class="chart" id="c-donut" viewBox="0 0 190 190" width="190" height="190" role="img" aria-label="Distribución por CWE"></svg>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <h2>Fabricantes más afectados</h2>
+          <span class="kebab">⋮</span>
+        </div>
+        <div class="hint">Nº de vulnerabilidades explotadas (pulsa una barra para filtrar la tabla)</div>
+        <svg class="chart" id="c-vendors" viewBox="0 0 580 290" role="img" aria-label="Top fabricantes"></svg>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <h2>Altas por año</h2>
+          <span class="legend-inline"><span class="d"></span>Vulnerabilidades</span>
+        </div>
+        <div class="hint">Vulnerabilidades explotadas incorporadas al catálogo cada año</div>
+        <svg class="chart" id="c-status" viewBox="0 0 580 290" role="img" aria-label="Estado de remediación"></svg>
+      </div>
+    </div>
+
+    <!-- TOOLS: asesor IA + comprobador de exposición -->
+    <div class="tools" id="tools" hidden>
+      <div class="card advisor">
+        <div class="adv-head">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5zM5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+          <h2>Asesor de ciberseguridad (IA)</h2>
+          <span class="tag" id="adv-model">—</span>
+        </div>
+        <div class="chat" id="chat">
+          <div class="msg bot">
+            <span class="av">IA</span>
+            <div class="bubble">
+              <p>Soy tu asesor de vulnerabilidades. Pregúntame por un <b>CVE</b>, un <b>fabricante</b> o un <b>producto</b> y te respondo con datos reales del catálogo CISA KEV: productos afectados, uso en ransomware, plazos de remediación y prioridad.</p>
+            </div>
+          </div>
+        </div>
+        <div class="suggest" id="suggest"></div>
+        <div class="adv-in">
+          <input id="adv-q" type="text" placeholder="Ej.: ¿Qué vulnerabilidades de Citrix hay y cómo las priorizo?" autocomplete="off">
+          <button class="btn primary" id="adv-send">Enviar</button>
+        </div>
+        <div class="disclaimer">Enfoque defensivo (remediación y priorización). La IA responde solo a partir del catálogo real; no sustituye una evaluación profesional.</div>
+      </div>
+
+      <div class="card expo">
+        <div class="card-h">
+          <h2>Comprobador de exposición</h2>
+          <span class="kebab">⋮</span>
+        </div>
+        <div class="hint">Pega tu stack (un fabricante o producto por línea) y comprueba qué KEVs te afectan</div>
+        <textarea id="expo-in" placeholder="Microsoft Windows&#10;Fortinet FortiOS&#10;Apache&#10;Citrix NetScaler"></textarea>
+        <button class="btn primary" id="expo-run">Comprobar exposición</button>
+        <div class="summary" id="expo-summary" style="margin-top:12px"></div>
+        <div class="res" id="expo-res"></div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="tablecard" id="tablecard" hidden>
+      <div class="toolbar">
+        <h2>Registro de vulnerabilidades</h2>
+        <span class="count" id="tcount">—</span>
+        <div class="search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="q" type="search" placeholder="Buscar CVE, fabricante, producto…" autocomplete="off">
+        </div>
+        <button class="chip" id="chip-rw" aria-pressed="false">Ransomware</button>
+        <button class="chip" id="chip-over" aria-pressed="false">Vencidas</button>
+      </div>
+      <div class="tscroll">
+        <table>
+          <thead><tr>
+            <th data-sort="id">CVE</th>
+            <th data-sort="v">Fabricante / Producto</th>
+            <th data-sort="n">Vulnerabilidad</th>
+            <th data-sort="a">Añadida <span class="ar">▼</span></th>
+            <th data-sort="due">Plazo</th>
+            <th>Marcas</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div class="empty" id="empty" hidden>Sin resultados para los filtros actuales.</div>
+      </div>
+    </div>
+
+    <div class="foot" id="foot" hidden>
+      Fuente: <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA Known Exploited Vulnerabilities Catalog</a>.
+      Datos descargados <b>en vivo</b> por el backend desde el feed oficial de CISA · <span id="foot-meta">—</span>.
+      Todas las cifras y gráficos se calculan sobre los registros reales del catálogo. Cada CVE enlaza a su ficha en la NVD del NIST.
+    </div>
+  </div>
+
+  <div class="tt" id="tt"></div>
+  <script src="vendor/d3.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

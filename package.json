@@ -1,0 +1,16 @@
+{
+  "name": "kev-advisor",
+  "version": "1.0.0",
+  "description": "Panel de inteligencia de vulnerabilidades en tiempo real sobre el catálogo CISA KEV, con asesor de ciberseguridad por IA (OpenRouter).",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
